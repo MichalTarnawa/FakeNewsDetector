@@ -184,12 +184,40 @@
 
             <Border Grid.Row="2" Background="{StaticResource SurfaceColor}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Padding="20" Margin="30,0,30,30" CornerRadius="16" Effect="{StaticResource SoftShadow}">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Visibility="{Binding ImageLoaded0}" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <Image Source="{Binding ImageSource0, TargetNullValue='Placeholder.png'}" Width="50px" Height="50px" Margin="0,0,5,0">
+                            </Image>
+                            <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage0}" Height="14" Width="10" Margin="30,0,0,30"/>
+                        </Grid>
+                        <Grid    Grid.Column="1" Visibility="{Binding ImageLoaded1}" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <Image Source="{Binding ImageSource1, TargetNullValue='Placeholder.png'}" Width="50px" Height="50px" Margin="0,0,5,0">
+                            </Image>
+                            <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage1}" Height="14" Width="10" Margin="30,0,0,30"/>
+                        </Grid>
+                        <Grid Grid.Column="2" Visibility="{Binding ImageLoaded2}" VerticalAlignment="Center" Margin="0,0,15,0">
+                            <Image Source="{Binding ImageSource2, TargetNullValue='Placeholder.png'}" Width="50px" Height="50px" Margin="0,0,5,0">
+                            </Image>
+                            <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage2}" Height="14" Width="10" Margin="30,0,0,30"/>
+                        </Grid>
 
-                    <Grid Grid.Column="0" VerticalAlignment="Center">
+                    </Grid>
+                    <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
                         <TextBlock Text="Zadaj pytanie, podaj link do grafiki lub wklej treść..." Foreground="{StaticResource TextSecondary}" FontSize="15" Margin="5,0,0,0" IsHitTestVisible="False">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -213,7 +241,14 @@
                         </TextBox>
                     </Grid>
 
-                    <Button Grid.Column="1" Style="{StaticResource GradientButton}" Width="50" Height="50" Margin="15,0,0,0" Command="{Binding SendCommand}">
+                    <Button x:Name="Imagebutton" Grid.Row="1" Width="50px" Height="50px" Style="{StaticResource GradientButton}" Command="{Binding FilePick}" Grid.Column="1">
+
+                        <TextBlock Text="Wybierz obrazek"
+                                     MaxHeight="100" TextWrapping="Wrap"
+                                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="1" Style="{StaticResource GradientButton}" Width="50" Height="50" Margin="15,0,0,0" Command="{Binding SendCommand}">
                         <Grid>
                             <Path Data="{StaticResource IconSend}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="20" Height="20" Stretch="Uniform" Margin="2,2,0,0">
                                 <Path.Style>
