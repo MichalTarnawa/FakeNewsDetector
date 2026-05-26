@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -34,36 +35,13 @@ namespace FakeNewsDetector.ViewModel
             get => _imagesource0;
             set { _imagesource0 = value; OnChanged(); }
         } 
-        private string _imagesource1;
-        public string ImageSource1
-        {
-            get => _imagesource1;
-            set { _imagesource1 = value; OnChanged(); }
-        }
-        private string _imagesource2;
-        public string ImageSource2
-        {
-            get => _imagesource2;
-            set { _imagesource2 = value; OnChanged(); }
-        }
         private string _imageloaded0 = "Hidden";
         public string ImageLoaded0
         {
             get => _imageloaded0;
             set { _imageloaded0 = value; OnChanged(); }
         }
-        private string _imageloaded1 = "Hidden" ;
-        public string ImageLoaded1
-        {
-            get => _imageloaded1;
-            set { _imageloaded1 = value; OnChanged(); }
-        }
-        private string _imageloaded2 = "Hidden";
-        public string ImageLoaded2
-        {
-            get => _imageloaded2;
-            set { _imageloaded2 = value; OnChanged(); }
-        }
+        
         private string _apiUrl = "";
         public string ApiUrl
         {
@@ -81,8 +59,6 @@ namespace FakeNewsDetector.ViewModel
         public ICommand SendCommand { get; }
         public ICommand FilePick { get; }
         public ICommand RemoveImage0 { get; }
-        public ICommand RemoveImage1 { get; }
-        public ICommand RemoveImage2 { get; }
         public MainWindow_VM()
         {
             ChatHistory = new ObservableCollection<ChatMessage>
@@ -100,8 +76,6 @@ namespace FakeNewsDetector.ViewModel
             SendCommand = new RelayCommand(SendMessage, CanSend);
             FilePick = new RelayCommand(Image_pick);
             RemoveImage0 = new RelayCommand(Remove_Image0);
-            RemoveImage1 = new RelayCommand(Remove_Image1);
-            RemoveImage2 = new RelayCommand(Remove_Image2);
             Debug.WriteLine(IsBusy);
         }
 
@@ -111,28 +85,22 @@ namespace FakeNewsDetector.ViewModel
 
             string userText = Message;
             Message = string.Empty;
+            string[] images = new string[1];
             IsBusy = true;
-            if (!string.IsNullOrEmpty(ImageSource0))
-            {
-                userText += $" [Obraz: {ImageSource0}]";
-            }
-            if (!string.IsNullOrEmpty(ImageSource1))
-            {
-                userText += $" [Obraz: {ImageSource1}]";
-            }
-            if (!string.IsNullOrEmpty(ImageSource2))
-            {
-                userText += $" [Obraz: {ImageSource2}]";
-            }
 
             ChatHistory.Add(new ChatMessage(userText, true));
 
             
+            if (!string.IsNullOrEmpty(ImageSource0))
+            {
+                byte[] bytes = File.ReadAllBytes(ImageSource0);
+                images[0] = Convert.ToBase64String(bytes);
+            }
             var loadingMessage = new ChatMessage("⏳ *Agenci analizują zapytanie...*", false);
             ChatHistory.Add(loadingMessage);
 
             
-            string response = await Task.Run(() => _apiService.SendMessageAsync(userText, ApiUrl));
+            string response = await Task.Run(() => _apiService.SendMessageAsync(userText, images, ApiUrl));
 
             
             ChatHistory.Remove(loadingMessage);
@@ -150,39 +118,17 @@ namespace FakeNewsDetector.ViewModel
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
-                image = new BitmapImage(new Uri(filePath));
                 if (ImageLoaded0 == "Hidden")
                 {
-                    ImageSource0 = filePath;
                     ImageLoaded0 = "Visible";
                 }
-                else if (ImageSource0 != filePath && ImageLoaded1 == "Hidden")
-                {
-                    ImageSource1 = filePath;
-                    ImageLoaded1 = "Visible";
-                }
-                else
-                {
-                    ImageSource2 = filePath;
-                    ImageLoaded2 = "Visible";
-                }
-                Debug.WriteLine("dziala:" + _imagesource0);
+                ImageSource0 = filePath;
             }
         }
         private void Remove_Image0()
         {
             ImageSource0 = string.Empty;
             ImageLoaded0 = "Hidden";
-        }
-        private void Remove_Image1()
-        {
-            ImageSource1 = string.Empty;
-            ImageLoaded1 = "Hidden";
-        }
-        private void Remove_Image2()
-        {
-            ImageSource2 = string.Empty;
-            ImageLoaded2 = "Hidden";
         }
         private bool CanSend()
         {

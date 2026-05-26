@@ -59,7 +59,7 @@ namespace FakeNewsDetector.Model
             }
         }
 
-        public async Task<string> SendMessageAsync(string message, string apiUrl)
+        public async Task<string> SendMessageAsync(string message, string[] Images, string apiUrl)
         {
             if (string.IsNullOrWhiteSpace(apiUrl))
                 return "Błąd: Nie podano adresu URL do API Gradio.";
@@ -69,7 +69,8 @@ namespace FakeNewsDetector.Model
                 var payload = new
                 {
                     url = apiUrl.Trim().TrimEnd('/'),
-                    question = message
+                    question = message,
+                    images = Images
                 };
 
                 var jsonContent = new StringContent(

@@ -17,13 +17,15 @@ def analyze():
     data = request.json
     url = data.get('url')
     question = data.get('question')
-
+    images = data.get('images')
+    if (len(images)>0):
+        image = images[0]
     try:
         if client is None or url != current_url:
             client = Client(url)
             current_url = url
         
-        result = client.predict(question, api_name="/predict")
+        result = client.predict(question, image, api_name="/predict")
         return jsonify({"answer": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -205,16 +205,7 @@
                             </Image>
                             <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage0}" Height="14" Width="10" Margin="30,0,0,30"/>
                         </Grid>
-                        <Grid    Grid.Column="1" Visibility="{Binding ImageLoaded1}" VerticalAlignment="Center" Margin="0,0,15,0">
-                            <Image Source="{Binding ImageSource1, TargetNullValue='Placeholder.png'}" Width="50px" Height="50px" Margin="0,0,5,0">
-                            </Image>
-                            <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage1}" Height="14" Width="10" Margin="30,0,0,30"/>
-                        </Grid>
-                        <Grid Grid.Column="2" Visibility="{Binding ImageLoaded2}" VerticalAlignment="Center" Margin="0,0,15,0">
-                            <Image Source="{Binding ImageSource2, TargetNullValue='Placeholder.png'}" Width="50px" Height="50px" Margin="0,0,5,0">
-                            </Image>
-                            <Button Content="X" Foreground="Red" Background="Transparent" BorderThickness="0" FontSize="9" Command="{Binding RemoveImage2}" Height="14" Width="10" Margin="30,0,0,30"/>
-                        </Grid>
+                       
 
                     </Grid>
                     <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
